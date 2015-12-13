@@ -21,7 +21,9 @@ describe('MingTemplate', () => {
       .then(mings => {
         expect(mings).to.be.deep.equal({
           NAME: 'some body\'s name',
-          STATEMENT: 'some statements'
+          STATEMENT: 'some statements',
+          declarations: 'variable declarartions',
+          funcdecl: 'function declaration'
         });
         done();
       })
@@ -51,7 +53,14 @@ describe('MingTemplate', () => {
       template: 'hello.template.js',
       input: {
         NAME: 'World',
-        STATEMENT: 'console.log("lalala...");'
+        STATEMENT: {
+          statement: 'console.log("lalala...");',
+          expression: '"console.log(\'lalala...\');"'
+        },
+        declarations: 'var a = 1; var b = 2;',
+        funcdecl: {
+          expression: 'function fun() {}'
+        }
       },
       output: 'hello.general.output.js'
     });
