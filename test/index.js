@@ -14,23 +14,18 @@ describe('MingTemplate', () => {
     expect(new MingTemplate()).to.be.instanceof(MingTemplate);
   });
 
-  const template = `
-    //
-    // @ming NAME some body's name
-    // @ming STATEMENT some statements
-    //
-    function hello_$NAME$() {
-      console.log('Hello, $NAME$');
-      $STATEMENT$;
-    }
-  `;
-
-  it('should collect the MINGs', () => {
-    const tmpl = new MingTemplate(template);
-    expect(tmpl.mings).to.be.deep.equal({
-      NAME: 'some body\'s name',
-      STATEMENT: 'some statements'
-    });
+  it('should collect the MINGs', (done) => {
+    p$readFile(path.join(__dirname, 'files', 'hello.template.js'))
+      .then(buffer => buffer.toString())
+      .then(content => new MingTemplate(content).mings)
+      .then(mings => {
+        expect(mings).to.be.deep.equal({
+          NAME: 'some body\'s name',
+          STATEMENT: 'some statements'
+        });
+        done();
+      })
+      .catch(done);
   });
 
   describe('render', () => {
