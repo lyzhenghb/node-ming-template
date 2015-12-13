@@ -1,8 +1,11 @@
-import assert from 'assert';
-import nodeMingTemplate from '../lib';
+import { expect } from 'chai';
+import MingTemplate from '../lib';
 
-describe('node-ming-template', function () {
-  it('should have unit test!', function () {
-    assert(false, 'we expected this package author to add actual unit tests.');
+describe('MingTemplate', function () {
+
+  it('should be a class', () => {
+    expect(MingTemplate).to.be.a('function');
+    expect(new MingTemplate()).to.be.instanceof(MingTemplate);
   });
+
 });
