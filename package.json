@@ -38,5 +38,11 @@
     "prepublish": "gulp prepublish",
     "test": "gulp"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "escodegen": "^1.7.1",
+    "esprima": "^2.7.1",
+    "estraverse": "^4.1.1",
+    "lodash": "^3.10.1"
+  }
 }
