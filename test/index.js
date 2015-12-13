@@ -1,7 +1,13 @@
 import { expect } from 'chai';
 import MingTemplate from '../lib';
+import Promise from 'bluebird';
+import _ from 'lodash';
+import fs from 'fs';
+import path from 'path';
 
-describe('MingTemplate', function () {
+const p$readFile = Promise.promisify(fs.readFile);
+
+describe('MingTemplate', () => {
 
   it('should be a class', () => {
     expect(MingTemplate).to.be.a('function');
@@ -27,14 +33,33 @@ describe('MingTemplate', function () {
     });
   });
 
-  it('should render the template', () => {
-    const tmpl = new MingTemplate(template);
-    const result = tmpl.render({
-      NAME: 'World',
-      STATEMENT: 'console.log("lalala...")'
+  describe('render', () => {
+    function testCase(message, options) {
+      it(`should ${message}`, (done) => {
+        _.chain(options)
+          .pick('template', 'output')
+          .map(name => path.join(__dirname, 'files', name))
+          .map(name => p$readFile(name))
+          .thru(Promise.all)
+          .value()
+          .map(buffer => buffer.toString().trim())
+          .then(contents => {
+            const tmpl = new MingTemplate(contents[0]);
+            expect(tmpl.render(options.input)).to.equal(contents[1]);
+            done();
+          })
+          .catch(done);
+      });
+    }
+
+    testCase('render the general template', {
+      template: 'hello.template.js',
+      input: {
+        NAME: 'World',
+        STATEMENT: 'console.log("lalala...");'
+      },
+      output: 'hello.general.output.js'
     });
-    const exp = `function hello_World() {\n    console.log('Hello, World');\n    console.log('lalala...');\n}`;
-    expect(result).to.equal(exp);
 
   });
 
